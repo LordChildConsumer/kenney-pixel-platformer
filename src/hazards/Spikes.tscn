@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://dat/sprites/Pixel-Platformer/Tilemap/tiles.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 8 )
+
+[node name="Spikes" type="StaticBody2D" groups=["hazard"]]
+collision_layer = 16
+collision_mask = 2
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 0, 8 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 160, 69, 18, 9 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 8 )
+shape = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

@@ -1,0 +1,101 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://src/items/Gem.gd" type="Script" id=1]
+[ext_resource path="res://dat/sprites/Pixel-Platformer/Tilemap/tiles.png" type="Texture" id=2]
+[ext_resource path="res://dat/sound/player/pickup.wav" type="AudioStream" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 16.0
+
+[sub_resource type="Animation" id=7]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "idle"
+loop = true
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 4, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0, 4, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.5, 1 )
+}
+
+[sub_resource type="Curve" id=3]
+max_value = 100.0
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.497872, 100 ), 160.227, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=9]
+curve = SubResource( 3 )
+
+[sub_resource type="Curve" id=5]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=10]
+curve = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=2]
+lifetime_randomness = 0.5
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 64.0
+initial_velocity_random = 0.5
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping_curve = SubResource( 9 )
+scale_curve = SubResource( 10 )
+
+[node name="Gem" type="Area2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 142, 63, 14, 13 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "idle"
+anims/RESET = SubResource( 7 )
+anims/idle = SubResource( 8 )
+
+[node name="PickupFX" type="Particles2D" parent="."]
+emitting = false
+amount = 32
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+process_material = SubResource( 2 )
+
+[node name="PickupSND" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+bus = "Pickups"
+
+[connection signal="body_entered" from="." to="." method="_on_Gem_body_entered"]
