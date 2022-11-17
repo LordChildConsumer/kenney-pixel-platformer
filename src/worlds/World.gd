@@ -1,4 +1,7 @@
 extends Node2D
 
 func _ready():
-	PlayerStats.health = 6
+	EventBus.connect("level_complete", self, "_on_Level_Complete")
+
+func _on_Level_Complete():
+	pass

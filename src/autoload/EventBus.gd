@@ -18,3 +18,6 @@ signal gem_purchase(cost)
 
 signal player_hurt(value)
 signal player_healed(value)
+signal player_killed()
+
+signal level_complete()

@@ -70,11 +70,13 @@ scale_curve = SubResource( 6 )
 script = ExtResource( 4 )
 
 [node name="Sprite" parent="." index="0"]
+position = Vector2( 0, -16 )
 texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 223, 143, 12, 12 )
 
 [node name="CollisionShape2D" parent="." index="1"]
+position = Vector2( 0, -16 )
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" parent="." index="2"]
@@ -83,10 +85,12 @@ anims/RESET = SubResource( 2 )
 anims/spin = SubResource( 3 )
 
 [node name="PickupSND" type="AudioStreamPlayer2D" parent="." index="3"]
+position = Vector2( 0, -16 )
 stream = ExtResource( 3 )
 bus = "Pickups"
 
 [node name="PickupFX" type="Particles2D" parent="." index="4"]
+position = Vector2( 0, -16 )
 emitting = false
 amount = 32
 one_shot = true

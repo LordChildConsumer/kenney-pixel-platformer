@@ -8,11 +8,15 @@ onready var health_bar = $HealthBar
 #
 func _ready():
 	PlayerStats.connect("update_hud", self, "_on_HUD_Update")
+	_on_HUD_Update()
 
 
 func _on_HUD_Update():
 	valuable_counter.text = (
-		"Coins: %s\nGems: %s" % [PlayerStats.coins, PlayerStats.gems]
+		"Coins: %s\nGems: %s" % [
+			PlayerStats.coins + PlayerStats.curr_coins,
+			PlayerStats.gems + PlayerStats.curr_gems
+		]
 	)
 	
 	health_bar.value = PlayerStats.health

@@ -1,7 +1,7 @@
 extends Control
 
 # Node/Scene References
-onready var StartWorld = preload("res://src/worlds/DevWorld.tscn")
+const STARTWORLD = "res://src/worlds/DevWorld.tscn"
 
 # Constants
 
@@ -31,7 +31,7 @@ func _physics_process(delta):
 
 func _on_Start_pressed():
 	disable_buttons()
-	EventBus.emit_signal("switch_scene", StartWorld)
+	SceneManager.call_deferred("load_new_scene", STARTWORLD)
 
 
 func _on_Settings_pressed():
@@ -39,8 +39,9 @@ func _on_Settings_pressed():
 
 
 func _on_Exit_pressed():
-	EventBus.emit_signal("quit_game")
+	get_tree().quit()
 
 func disable_buttons():
-	$Start.disabled = true
-	$Settings.disabled = true
+	$Start.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Settings.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Exit.mouse_filter = Control.MOUSE_FILTER_IGNORE

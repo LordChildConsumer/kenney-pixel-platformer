@@ -3,10 +3,10 @@ extends CanvasLayer
 
 
 func _on_Retry_pressed():
-	$Retry.disabled = true
-	EventBus.emit_signal("reload_scene")
+	$Retry.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	SceneManager.reload_current_scene()
 
 
 func _on_Quit_pressed():
-	$Retry.disabled = true
-	get_tree().reload_current_scene()
+	$Retry.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	SceneManager.load_new_scene("res://src/menus/MainMenu.tscn")

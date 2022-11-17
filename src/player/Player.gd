@@ -3,6 +3,7 @@ extends Actor
 #
 # Node/Scene references
 #
+onready var current_world = self.get_parent()
 
 ## Sound
 onready var jump_snd = $Sound/Jump1
@@ -10,12 +11,15 @@ onready var double_jump_snd = $Sound/Jump2
 onready var hurt_snd = $Sound/Hurt
 onready var step_snd = $Sound/Step
 onready var death_snd = $Sound/Death
+onready var victory_snd = $Sound/Victory
 
 ## Particles
 onready var jump_fx = $Effects/Jump
 onready var death_fx = $Effects/Death
+onready var victory_fx = $Effects/Victory
 
 ## Game Over
+onready var game_over_text = $GameOver/Label
 onready var game_over = $GameOver
 onready var retry_btn = $GameOver/Retry
 onready var quit_btn = $GameOver/Quit
@@ -39,6 +43,11 @@ var is_alive = true
 # True = Higher pitched
 # False = Lower pitched
 var step = true
+
+
+func _ready():
+	EventBus.connect("level_complete", self, "_on_Level_Complete")
+
 
 func _physics_process(delta: float) -> void:
 	var sprite_flash_mod = sprite.material.get_shader_param("flash_mod")
@@ -87,6 +96,7 @@ func _physics_process(delta: float) -> void:
 	elif is_jump_cancelled:
 		velocity.y = lerp(velocity.y, 0.0, 0.35)
 	elif is_idling || is_moving:
+		velocity.y = 1
 		_jumps_made = 0
 	
 	##
@@ -112,6 +122,10 @@ func _physics_process(delta: float) -> void:
 	
 	var slide_collision = get_last_slide_collision()
 	
+	if slide_collision && slide_collision.collider.is_in_group("EndofLevel"):
+		EventBus.emit_signal("level_complete")
+		print("Complete?")
+	
 	if slide_collision && slide_collision.collider.is_in_group("hazard"):
 		EventBus.emit_signal("player_hurt", 1)
 		if !is_alive:
@@ -120,18 +134,36 @@ func _physics_process(delta: float) -> void:
 		sprite.material.set_shader_param("flash_mod", 1.0)
 		launch_vector = self.global_position.direction_to(slide_collision.collider.global_position) * -1000
 
+func _on_Level_Complete():
+	is_alive = false
+	victory_snd.play()
+	victory_fx.emitting = true
+	
+	_show_game_over("You Won!")
+
 func _kill_player():
 	is_alive = false
+	
+	EventBus.emit_signal("player_killed")
+	
 	death_fx.emitting = true
 	sprite.rotation_degrees = 90
 	
 	death_snd.play()
 	
 	# Show the game over screen
+	_show_game_over("You Died!")
+	
+
+func _show_game_over(reason):
+	PlayerStats.health = 6
+	
+	game_over_text.text = reason
+	
 	retry_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 	quit_btn.mouse_filter = Control.MOUSE_FILTER_STOP
-	game_over.visible = true
 	
+	game_over.visible = true
 
 # Lets the animation player toggle which step sound to play
 func _toggle_step():

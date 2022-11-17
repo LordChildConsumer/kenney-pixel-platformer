@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://dat/sprites/Pixel-Platformer/Characters/character_0000.png" type="Texture" id=1]
 [ext_resource path="res://dat/sprites/Pixel-Platformer/Characters/character_0001.png" type="Texture" id=2]
@@ -13,6 +13,8 @@
 [ext_resource path="res://dat/UI/hearts/FullHearts.png" type="Texture" id=11]
 [ext_resource path="res://src/player/GameOver.gd" type="Script" id=12]
 [ext_resource path="res://dat/sound/player/killed.wav" type="AudioStream" id=13]
+[ext_resource path="res://dat/sound/player/victory.wav" type="AudioStream" id=14]
+[ext_resource path="res://dat/UI/fonts/Kenny/Kenney Rocket.ttf" type="DynamicFontData" id=15]
 
 [sub_resource type="Shader" id=16]
 code = "shader_type canvas_item;
@@ -151,7 +153,7 @@ orbit_velocity_random = 0.0
 scale_curve = SubResource( 6 )
 
 [sub_resource type="Gradient" id=9]
-colors = PoolColorArray( 1, 0, 0, 1, 0.689453, 0, 0, 1 )
+colors = PoolColorArray( 0.0134277, 0.429688, 0, 1, 0.242188, 1, 0, 1 )
 
 [sub_resource type="GradientTexture" id=10]
 gradient = SubResource( 9 )
@@ -184,9 +186,27 @@ scale = 2.0
 scale_curve = SubResource( 14 )
 color_ramp = SubResource( 10 )
 
+[sub_resource type="ParticlesMaterial" id=18]
+lifetime_randomness = 0.25
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 256.0
+initial_velocity_random = 0.5
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping_curve = SubResource( 12 )
+scale = 2.0
+scale_curve = SubResource( 14 )
+color_ramp = SubResource( 10 )
+
 [sub_resource type="DynamicFont" id=8]
 size = 32
 font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=19]
+size = 72
+font_data = ExtResource( 15 )
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
@@ -232,6 +252,15 @@ explosiveness = 1.0
 local_coords = false
 process_material = SubResource( 15 )
 
+[node name="Victory" type="Particles2D" parent="Effects"]
+emitting = false
+amount = 128
+lifetime = 15.0
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+process_material = SubResource( 18 )
+
 [node name="Sound" type="Node2D" parent="."]
 
 [node name="Jump1" type="AudioStreamPlayer2D" parent="Sound"]
@@ -251,6 +280,10 @@ stream = ExtResource( 7 )
 
 [node name="Death" type="AudioStreamPlayer2D" parent="Sound"]
 stream = ExtResource( 13 )
+
+[node name="Victory" type="AudioStreamPlayer2D" parent="Sound"]
+stream = ExtResource( 14 )
+bus = "Player"
 
 [node name="HUD" type="CanvasLayer" parent="."]
 script = ExtResource( 9 )
@@ -293,7 +326,7 @@ margin_top = -92.0
 margin_right = 192.0
 margin_bottom = -28.0
 mouse_filter = 2
-text = "Retry"
+text = "Restart"
 
 [node name="Quit" type="Button" parent="GameOver"]
 anchor_left = 0.5
@@ -306,6 +339,14 @@ margin_right = 192.0
 margin_bottom = 92.0
 mouse_filter = 2
 text = "Quit to menu"
+
+[node name="Label" type="Label" parent="GameOver"]
+anchor_right = 1.0
+margin_bottom = 408.0
+custom_fonts/font = SubResource( 19 )
+text = "Victory!"
+align = 1
+valign = 1
 
 [connection signal="pressed" from="GameOver/Retry" to="GameOver" method="_on_Retry_pressed"]
 [connection signal="pressed" from="GameOver/Quit" to="GameOver" method="_on_Quit_pressed"]

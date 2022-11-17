@@ -33,14 +33,15 @@ _global_script_class_icons={
 [application]
 
 config/name="Kenney-Platformer"
-run/main_scene="res://src/managers/SceneManager.tscn"
+run/main_scene="res://src/menus/MainMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-EventBus="*res://src/singletons/EventBus.gd"
-Console="*res://console/Console.tscn"
-PlayerStats="*res://src/singletons/PlayerStats.gd"
+SceneManager="*res://src/autoload/scene-manager/SceneManager.tscn"
+EventBus="*res://src/autoload/EventBus.gd"
+PlayerStats="*res://src/autoload/PlayerStats.gd"
+Console="*res://src/autoload/console/Console.tscn"
 
 [display]
 
